@@ -1,4 +1,3 @@
-==About
 
 This is my first experiment with VHDL. I created a simple chronometer with seven segments displays showing minutes and seconds. The FPGA is an Altera MAX II. The clock is derived by the 50MHz oscillator present on the board.
 
@@ -8,8 +7,8 @@ solution is good only for a prototype as the displays are rather dim and you can
 
 Below is a picture of the display in action:
 
-(Display)[./images/Display.jpg]
+![Display](./images/Display.jpg)
 
 And this is the Altera Max II board I used:
 
-(Display)[./images/Board.jpg]
+![Display](./images/Board.jpg)
