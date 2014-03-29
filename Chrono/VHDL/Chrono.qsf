@@ -73,3 +73,5 @@ set_location_assignment PIN_55 -to DISPLAY_SEG[6]
 set_location_assignment PIN_72 -to DISPLAY_EN[3]
 set_location_assignment PIN_66 -to DISPLAY_DP
 set_global_assignment -name VHDL_FILE BCDCounter.vhd
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
