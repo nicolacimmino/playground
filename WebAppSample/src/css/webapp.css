@@ -1,0 +1,47 @@
+
+/*
+ * ===== General Styles ====
+ */
+ 
+ div.button
+  {
+	border: 1px solid black;
+	width: 60%;
+	max-width: 100px;
+ }
+ 
+ duv.image_button
+ {
+	background-repeat: no-repeat;
+	background-size: 100%;
+ }
+ 
+div.button:click
+{
+ background-color:yellow;
+}
+
+/*
+ * ===== Specific Elements ====
+ */
+ 
+ #start_button
+ {
+	background:url('../images/start.png');
+	width: 42px;
+	height: 42px;
+ }
+
+ #stop_button
+ {
+	background:url('../images/stop.png');
+	width: 42px;
+	height: 42px;
+}
+ 
+ #action_button
+  {
+	border: 1px solid black;
+	width: 50%;
+	height: 50%;
+ }
