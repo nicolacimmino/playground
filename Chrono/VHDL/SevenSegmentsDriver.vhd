@@ -1,8 +1,25 @@
+-- SevenSegmentDriver implements a driver for a 7-segments display.
+--
+--  Copyright (C) 2014 Nicola Cimmino
+--
+--    This program is free software: you can redistribute it and/or modify
+--    it under the terms of the GNU General Public License as published by
+--    the Free Software Foundation, either version 3 of the License, or
+--    (at your option) any later version.
+--
+--   This program is distributed in the hope that it will be useful,
+--    but WITHOUT ANY WARRANTY; without even the implied warranty of
+--    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--    GNU General Public License for more details.
+--
+--    You should have received a copy of the GNU General Public License
+--    along with this program.  If not, see http://www.gnu.org/licenses/.
+--
 --------------------------------------------------
 -- Driver for a seven segments display.
 --
 -- SEGM  0-7 	out	Segments from a to g
--- BCD   15-0 	in		Input value BCD coded (4 digits)
+-- BCD   3-0 	in		Input value BCD coded
 --------------------------------------------------
 
 library ieee;
@@ -26,7 +43,6 @@ begin
 	begin	    
 		case  BCD is
 			when "0000"=> SEGM <="1000000";  -- '0'
-			                      
 			when "0001"=> SEGM <="1111001";  -- '1'
 			when "0010"=> SEGM <="0100100";  -- '2'
 			when "0011"=> SEGM <="0110000";  -- '3'

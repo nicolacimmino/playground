@@ -38,11 +38,12 @@ end ThreeStateBuffer;
 
 --------------------------------------------------
 
-
 architecture Behaviour of ThreeStateBuffer is
 begin
 	process (EN, I)
 	begin
+		-- We just mirror input to output unless EN=0
+		--		in which case we put the output to hi-impedance
 		if(EN = '1') then
 			O <= I;
 		else
