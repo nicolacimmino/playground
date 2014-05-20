@@ -18,35 +18,52 @@
 
 var jade = require('jade');
 var fs = require('fs');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(':memory:');
 
-function login(response, postData) {
-	fs.readFile('login.jade', 'utf8', function (err, data) {
-		if (err) {
-			response.writeHead(500, {"Content-Type": "text/html"});
-			response.write("Internal Server Error");
-			response.end();
-			return;
-		}
+function initialize()
+{
+	db.serialize(function() {
+		db.run("CREATE TABLE vals (key TEXT, value TEXT)");
+
+		var stmt = db.prepare("INSERT INTO vals (key, value) VALUES (?,?)");
+		stmt.run("bla", "bla@test.com");
+		stmt.run("bla2", "blatwo@test.com");
 		
-			var body = jade.compile(data)({
-			  user: {
-				name: 'nicola',
-				password: ''
-			  }
-			});
-	
-		response.writeHead(200, {"Content-Type": "text/html"});
-		response.write(body);
-		response.end();
+		stmt.finalize();
 	});
 }
 
-function upload(response, postData) {
-	console.log("Request handler 'upload' was called.");
-	response.writeHead(200, {"Content-Type": "text/plain"});
-	response.write("You've sent: " + postData);
-	response.end();
+function get(pathname, parameters, response) {
+	
+	console.log(parameters);
+		
+	db.serialize(function() {
+		var body = "";		
+		db.get("SELECT key, value FROM vals WHERE key=?", parameters['key'], function(err, row) {
+			if(row!=undefined) {
+				body = row.value;
+			}
+			response.writeHead(200, {"Content-Type": "text/plain"});
+			response.write(body);
+			response.end();
+		});
+	});
+
 }
 
-exports.login = login;
-exports.upload = upload;
+function set(pathname, parameters, response) {
+	
+	console.log(parameters);
+		
+	db.serialize(function() {
+		var stmt = db.prepare("INSERT INTO vals (key, value) VALUES (?,?)");
+		stmt.run(parameters['key'], parameters['value']);
+		stmt.finalize();
+	});
+
+}
+
+exports.initialize = initialize;
+exports.get = get;
+exports.set = set;

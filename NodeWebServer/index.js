@@ -20,11 +20,11 @@ var server = require("./server");
 var router = require("./router");
 var requestHandlers = require("./requestHandlers");
 
-var handle = {}
-handle["/"] = requestHandlers.login;
-handle["/login"] = requestHandlers.login;
-handle["/upload"] = requestHandlers.upload;
+requestHandlers.initialize();
 
+var handle = {};
+handle["/get"] = requestHandlers.get;
+handle["/set"] = requestHandlers.set;
 
 server.start(router.route, handle);
 	
