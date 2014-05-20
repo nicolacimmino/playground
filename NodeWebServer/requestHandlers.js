@@ -60,6 +60,10 @@ function set(pathname, parameters, response) {
 		var stmt = db.prepare("INSERT INTO vals (key, value) VALUES (?,?)");
 		stmt.run(parameters['key'], parameters['value']);
 		stmt.finalize();
+		
+		response.writeHead(200, {"Content-Type": "text/plain"});		
+		response.write("OK");
+		response.end();
 	});
 
 }
