@@ -28,3 +28,11 @@ To start the application, move inside athe applicationName folder and:
 
     npm start
 	
+MongoDB Cheatsheet
+-------------
+
+Add data:
+
+    db.usercollection.insert({ "username" : "testuser1", "email" : "testuser1@testdomain.com" })
+	
+	
