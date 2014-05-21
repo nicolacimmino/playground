@@ -25,12 +25,6 @@ function initialize()
 {
 	db.serialize(function() {
 		db.run("CREATE TABLE vals (key TEXT, value TEXT)");
-
-		var stmt = db.prepare("INSERT INTO vals (key, value) VALUES (?,?)");
-		stmt.run("bla", "bla@test.com");
-		stmt.run("bla2", "blatwo@test.com");
-		
-		stmt.finalize();
 	});
 }
 
@@ -58,7 +52,7 @@ function set(pathname, parameters, response) {
 		
 	db.serialize(function() {
 		var stmt = db.prepare("INSERT INTO vals (key, value) VALUES (?,?)");
-		stmt.run(parameters['key'], parameters['value']);
+		stmt.run(parameters.key, parameters.value);
 		stmt.finalize();
 		
 		response.writeHead(200, {"Content-Type": "text/plain"});		
