@@ -10,7 +10,7 @@ The picture below gives a rough idea of the system architecture. The application
 
 ![Structure](https://raw.github.com/nicolacimmino/playground/master/WebAppSample/documentation/structure.png)
 
-Because the application is in the local storage, it can be preserved and re-rendered even if the browser is closed and re-opened or the page reloaded. The main benefit anyhow is that the application keeps being responsive even when connection is flacky or just lost, this wouldn't be possibile with the traditional approach that submits every action to the server and loads a new page as result.
+Because the application data is in the local storage, it can be preserved and re-rendered even if the browser is closed and re-opened or the page reloaded. The main benefit anyhow is that the application keeps being responsive even when connection is flacky or just lost, this wouldn't be possibile with the traditional approach that submits every action to the server and loads a new page as result.
 
 Below is a screenshot of the sample application. User has a "play" button to start action. When "play" is pressed a timer starts to count. User can interact with 3 action buttons and his actions will be recorded in the "history" page. A status line on top indicates "Sync ongoing..." while there is data pending syncronization with the server.
 
