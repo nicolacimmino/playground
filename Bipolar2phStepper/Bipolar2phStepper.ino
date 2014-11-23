@@ -39,6 +39,8 @@ void setup()
 #define CW 0
 #define CCW 1
 
+// Steps per round (20=18deg/step).
+#define STEPS_PER_ROUND 20
 
 void loop()
 { 
@@ -67,7 +69,7 @@ void stepMotorWaveDrive(byte direction, uint8_t speedRPM)
        case 2: driveMotor(NEUTRAL, MINUS, controlPulseDuration); break;
        case 3: driveMotor(MINUS, NEUTRAL, controlPulseDuration); break;  
     }
-    delay((3000.0f/speedRPM)-controlPulseDuration);
+    delay((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
 }
 
 
@@ -90,7 +92,7 @@ void stepMotorFullStepDrive(byte direction, uint8_t speedRPM)
        case 2: driveMotor(MINUS, MINUS, controlPulseDuration); break;
        case 3: driveMotor(MINUS, PLUS, controlPulseDuration); break;  
     }
-    delay((3000.0f/speedRPM)-controlPulseDuration);
+    delay((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
 }
 
 /*
@@ -117,7 +119,7 @@ void stepMotorHalfStepDrive(byte direction, uint8_t speedRPM)
        case 7: driveMotor(MINUS, PLUS, controlPulseDuration); break; 
        
     }
-    delay((1500.0f/speedRPM)-controlPulseDuration);
+    delay((STEPS_PER_ROUND*75.0f/speedRPM)-controlPulseDuration);
 }
 
 /*
