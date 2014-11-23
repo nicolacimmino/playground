@@ -44,24 +44,44 @@ void loop()
 { 
   while(1)
   {
-    stepMotor(CW, 3);
+    stepMotorHalfStepDrive(CW, 1);
   }
 }
 
 /*
  * Move the motor one step forwad in the supplied 
- * direction. For the time being speedRPM passed
- * is the speed that would be achieved if the 
- * function was called repeatedly with no delay.
- * This is suitable only for testing.
+ * direction. Using wave drive.
  */
-void stepMotor(byte direction, uint8_t speedRPM)
+void stepMotorWaveDrive(byte direction, uint8_t speedRPM)
 {
     static uint8_t currentStep = 0;
 
     currentStep=currentStep+((direction==CCW)?-1:1);
     currentStep=currentStep%4;
-    uint8_t controlPulseDuration = (speedRPM<=20)?100:30;
+    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
+    
+    switch(currentStep)
+    {
+       case 0: driveMotor(NEUTRAL, PLUS, controlPulseDuration); break;
+       case 1: driveMotor(PLUS, NEUTRAL, controlPulseDuration); break;
+       case 2: driveMotor(NEUTRAL, MINUS, controlPulseDuration); break;
+       case 3: driveMotor(MINUS, NEUTRAL, controlPulseDuration); break;  
+    }
+    delay((3000.0f/speedRPM)-controlPulseDuration);
+}
+
+
+/*
+ * Move the motor one step forwad in the supplied 
+ * direction. Using full step drive.
+ */
+void stepMotorFullStepDrive(byte direction, uint8_t speedRPM)
+{
+    static uint8_t currentStep = 0;
+
+    currentStep=currentStep+((direction==CCW)?-1:1);
+    currentStep=currentStep%4;
+    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
     
     switch(currentStep)
     {
@@ -71,6 +91,33 @@ void stepMotor(byte direction, uint8_t speedRPM)
        case 3: driveMotor(MINUS, PLUS, controlPulseDuration); break;  
     }
     delay((3000.0f/speedRPM)-controlPulseDuration);
+}
+
+/*
+ * Move the motor one step forwad in the supplied 
+ * direction. Using half step drive.
+ */
+void stepMotorHalfStepDrive(byte direction, uint8_t speedRPM)
+{
+    static uint8_t currentStep = 0;
+
+    currentStep=currentStep+((direction==CCW)?-1:1);
+    currentStep=currentStep%8;
+    uint8_t controlPulseDuration = (speedRPM<=20)?50:5;
+    
+    switch(currentStep)
+    {
+       case 0: driveMotor(NEUTRAL, PLUS, controlPulseDuration); break;
+       case 1: driveMotor(PLUS, PLUS, controlPulseDuration); break;
+       case 2: driveMotor(PLUS, NEUTRAL, controlPulseDuration); break;
+       case 3: driveMotor(PLUS, MINUS, controlPulseDuration); break;
+       case 4: driveMotor(NEUTRAL, MINUS, controlPulseDuration); break;
+       case 5: driveMotor(MINUS, MINUS, controlPulseDuration); break;
+       case 6: driveMotor(MINUS, NEUTRAL, controlPulseDuration); break; 
+       case 7: driveMotor(MINUS, PLUS, controlPulseDuration); break; 
+       
+    }
+    delay((1500.0f/speedRPM)-controlPulseDuration);
 }
 
 /*
