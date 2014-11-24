@@ -25,7 +25,7 @@ void setup()
   pinMode(COILA_N, OUTPUT);
   pinMode(COILA_S, OUTPUT);
   pinMode(COILB_N, OUTPUT);
-  pinMode(COILB_S, OUTPUT);
+  pinMode(COILB_S, OUTPUT);  
 }
 
 // Coil pulse stimulus direction.
@@ -44,23 +44,45 @@ void setup()
 
 void loop()
 { 
-  while(1)
-  {
-    stepMotorHalfStepDrive(CW, 1);
-  }
+   stepMotorHalfStepDrive(CW, 1, false);
+   // Any other code here as long as it doesn't take longer
+   // than one step at the desired RPM.
 }
+
+
 
 /*
  * Move the motor one step forwad in the supplied 
- * direction. Using wave drive.
+ * direction. Using wave drive. There is really no
+ * reason to prefer this to the full step, it just
+ * gives less torque. It's here mainly for reference.
  */
-void stepMotorWaveDrive(byte direction, uint8_t speedRPM)
+void stepMotorWaveDrive(byte direction, uint8_t speedRPM, boolean holdControl)
 {
     static uint8_t currentStep = 0;
+    static long lastStepTime=0;
+    
+    // When spinning slowly we cannot afford small pulses to control
+    // as they won't be enough to win the initial inertia. At higer speed
+    // momentum will help so we can keep the pulse shorter, we also need to
+    // keep the pulse shorter else we cannot achieved the desired RPM.
+    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
+    if(holdControl) controlPulseDuration=0;
 
+    // This is the expected interval in mS between two steps to reach the
+    // required RPM.
+    long stepsInterval = ((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
+    
+    // If it's not yet long enough since last step do nothing.
+    if(millis()-lastStepTime<stepsInterval) return;
+    
+    lastStepTime = millis();
+
+    // Move to the next step. This is a bipolar 2-phase motor
+    // so when running in wave we have 4 different control
+    // pulses.
     currentStep=currentStep+((direction==CCW)?-1:1);
     currentStep=currentStep%4;
-    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
     
     switch(currentStep)
     {
@@ -69,7 +91,6 @@ void stepMotorWaveDrive(byte direction, uint8_t speedRPM)
        case 2: driveMotor(NEUTRAL, MINUS, controlPulseDuration); break;
        case 3: driveMotor(MINUS, NEUTRAL, controlPulseDuration); break;  
     }
-    delay((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
 }
 
 
@@ -77,13 +98,32 @@ void stepMotorWaveDrive(byte direction, uint8_t speedRPM)
  * Move the motor one step forwad in the supplied 
  * direction. Using full step drive.
  */
-void stepMotorFullStepDrive(byte direction, uint8_t speedRPM)
+void stepMotorFullStepDrive(byte direction, uint8_t speedRPM, boolean holdControl)
 {
     static uint8_t currentStep = 0;
+    static long lastStepTime=0;
+    
+    // When spinning slowly we cannot afford small pulses to control
+    // as they won't be enough to win the initial inertia. At higer speed
+    // momentum will help so we can keep the pulse shorter, we also need to
+    // keep the pulse shorter else we cannot achieved the desired RPM.
+    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
+    if(holdControl) controlPulseDuration=0;
 
+    // This is the expected interval in mS between two steps to reach the
+    // required RPM.
+    long stepsInterval = ((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
+    
+    // If it's not yet long enough since last step do nothing.
+    if(millis()-lastStepTime<stepsInterval) return;
+    
+    lastStepTime = millis();
+
+    // Move to the next step. This is a bipolar 2-phase motor
+    // so when running full step we have 4 different control
+    // pulses.
     currentStep=currentStep+((direction==CCW)?-1:1);
     currentStep=currentStep%4;
-    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
     
     switch(currentStep)
     {
@@ -92,20 +132,38 @@ void stepMotorFullStepDrive(byte direction, uint8_t speedRPM)
        case 2: driveMotor(MINUS, MINUS, controlPulseDuration); break;
        case 3: driveMotor(MINUS, PLUS, controlPulseDuration); break;  
     }
-    delay((STEPS_PER_ROUND*150.0f/speedRPM)-controlPulseDuration);
 }
 
 /*
  * Move the motor one step forwad in the supplied 
  * direction. Using half step drive.
  */
-void stepMotorHalfStepDrive(byte direction, uint8_t speedRPM)
+void stepMotorHalfStepDrive(byte direction, uint8_t speedRPM, boolean holdControl)
 {
     static uint8_t currentStep = 0;
+    static long lastStepTime=0;
+    
+    // When spinning slowly we cannot afford small pulses to control
+    // as they won't be enough to win the initial inertia. At higer speed
+    // momentum will help so we can keep the pulse shorter, we also need to
+    // keep the pulse shorter else we cannot achieved the desired RPM.
+    uint8_t controlPulseDuration = (speedRPM<=20)?50:5;
+    if(holdControl) controlPulseDuration=0;
+    
+    // This is the expected interval in mS between two steps to reach the
+    // required RPM.
+    long stepsInterval = ((STEPS_PER_ROUND*75.0f/speedRPM)-controlPulseDuration);
 
+    // If it's not yet long enough since last step do nothing.
+    if(millis()-lastStepTime<stepsInterval) return;
+    
+    lastStepTime = millis();
+    
+    // Move to the next step. This is a bipolar 2-phase motor
+    // so when running half step we have 8 different control
+    // pulses.
     currentStep=currentStep+((direction==CCW)?-1:1);
     currentStep=currentStep%8;
-    uint8_t controlPulseDuration = (speedRPM<=20)?50:5;
     
     switch(currentStep)
     {
@@ -119,12 +177,14 @@ void stepMotorHalfStepDrive(byte direction, uint8_t speedRPM)
        case 7: driveMotor(MINUS, PLUS, controlPulseDuration); break; 
        
     }
-    delay((STEPS_PER_ROUND*75.0f/speedRPM)-controlPulseDuration);
+    
 }
 
 /*
  * Drives the motor sending the control pulse specified for
- * the supplied contol pulse duration (in mS).
+ * the supplied contol pulse duration (in mS). If the supplied
+ * pulse duration is zero the control signal is left on indefinitely
+ * so that hold torque can be taken advantage of.
  */
 void driveMotor(byte coilA, byte phaseB, uint8_t controlPulseDuration)
 {
@@ -132,7 +192,7 @@ void driveMotor(byte coilA, byte phaseB, uint8_t controlPulseDuration)
     digitalWrite(COILA_S, (coilA==MINUS)?HIGH:LOW);
     digitalWrite(COILB_N, (phaseB==PLUS)?HIGH:LOW);
     digitalWrite(COILB_S, (phaseB==MINUS)?HIGH:LOW);
-    if(coilA!=NEUTRAL && phaseB!=NEUTRAL)
+    if(coilA!=NEUTRAL && phaseB!=NEUTRAL && controlPulseDuration!=0)
     {
       delay(controlPulseDuration);
       driveMotor(NEUTRAL,NEUTRAL, 0);
