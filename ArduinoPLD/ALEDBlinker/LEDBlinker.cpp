@@ -46,22 +46,22 @@ STATIC BOOL I_b_mcr = 0;
 STATIC BOOL I_b_rung_top = 0;
 #define Read_I_b_rung_top() I_b_rung_top
 #define Write_I_b_rung_top(x) I_b_rung_top = x
-STATIC BOOL U_b_RflashOsc = 0;
-#define Read_U_b_RflashOsc() U_b_RflashOsc
-#define Write_U_b_RflashOsc(x) U_b_RflashOsc = x
-STATIC SWORD U_i_Tosc_on = 0;
-STATIC BOOL I_b_Tosc_off_antiglitch = 0;
-#define Read_I_b_Tosc_off_antiglitch() I_b_Tosc_off_antiglitch
-#define Write_I_b_Tosc_off_antiglitch(x) I_b_Tosc_off_antiglitch = x
-STATIC SWORD U_i_Tosc_off = 0;
+STATIC BOOL U_b_Rosc = 0;
+#define Read_U_b_Rosc() U_b_Rosc
+#define Write_U_b_Rosc(x) U_b_Rosc = x
+STATIC SWORD U_i_TdelayOn = 0;
+STATIC BOOL I_b_TdelayOff_antiglitch = 0;
+#define Read_I_b_TdelayOff_antiglitch() I_b_TdelayOff_antiglitch
+#define Write_I_b_TdelayOff_antiglitch(x) I_b_TdelayOff_antiglitch = x
+STATIC SWORD U_i_TdelayOff = 0;
 
 /* You provide this function. */
-PROTO(extern BOOL Read_U_b_XD12(void);)
+PROTO(extern BOOL Read_U_b_X1(void);)
 
 STATIC BOOL I_b_oneShot_0000 = 0;
 #define Read_I_b_oneShot_0000() I_b_oneShot_0000
 #define Write_I_b_oneShot_0000(x) I_b_oneShot_0000 = x
-STATIC SWORD U_i_CLEDstate = 0;
+STATIC SWORD U_i_Cstatus = 0;
 STATIC BOOL I_b_parOut_0000 = 0;
 #define Read_I_b_parOut_0000() I_b_parOut_0000
 #define Write_I_b_parOut_0000(x) I_b_parOut_0000 = x
@@ -71,8 +71,8 @@ STATIC BOOL I_b_parThis_0000 = 0;
 STATIC SWORD I_i_scratch2 = 0;
 
 /* You provide these functions. */
-PROTO(BOOL Read_U_b_YD13(void);)
-PROTO(void Write_U_b_YD13(BOOL v);)
+PROTO(BOOL Read_U_b_Y1(void);)
+PROTO(void Write_U_b_Y1(BOOL v);)
 
 
 
@@ -87,36 +87,36 @@ void PlcCycle(void)
     Write_I_b_rung_top(Read_I_b_mcr());
     
     /* start series [ */
-    if(!Read_U_b_RflashOsc()) {
+    if(!Read_U_b_Rosc()) {
         Write_I_b_rung_top(0);
     }
     
     if(Read_I_b_rung_top()) {
-        if(U_i_Tosc_on < 24) {
-            U_i_Tosc_on++;
+        if(U_i_TdelayOn < 9) {
+            U_i_TdelayOn++;
             Write_I_b_rung_top(0);
         }
     } else {
-        U_i_Tosc_on = 0;
+        U_i_TdelayOn = 0;
     }
     
-    if(!Read_I_b_Tosc_off_antiglitch()) {
-        U_i_Tosc_off = 74;
+    if(!Read_I_b_TdelayOff_antiglitch()) {
+        U_i_TdelayOff = 39;
     }
-    Write_I_b_Tosc_off_antiglitch(1);
+    Write_I_b_TdelayOff_antiglitch(1);
     if(!Read_I_b_rung_top()) {
-        if(U_i_Tosc_off < 74) {
-            U_i_Tosc_off++;
+        if(U_i_TdelayOff < 39) {
+            U_i_TdelayOff++;
             Write_I_b_rung_top(1);
         }
     } else {
-        U_i_Tosc_off = 0;
+        U_i_TdelayOff = 0;
     }
     
     if(Read_I_b_rung_top()) {
-        Write_U_b_RflashOsc(0);
+        Write_U_b_Rosc(0);
     } else {
-        Write_U_b_RflashOsc(1);
+        Write_U_b_Rosc(1);
     }
     
     /* ] finish series */
@@ -125,16 +125,16 @@ void PlcCycle(void)
     Write_I_b_rung_top(Read_I_b_mcr());
     
     /* start series [ */
-    if(!Read_U_b_XD12()) {
+    if(!Read_U_b_X1()) {
         Write_I_b_rung_top(0);
     }
     
     if(Read_I_b_rung_top()) {
         if(!Read_I_b_oneShot_0000()) {
-            U_i_CLEDstate++;
-            if(U_i_CLEDstate < 3) {
+            U_i_Cstatus++;
+            if(U_i_Cstatus < 3) {
             } else {
-                U_i_CLEDstate = 0;
+                U_i_Cstatus = 0;
             }
         }
     }
@@ -150,7 +150,7 @@ void PlcCycle(void)
     Write_I_b_parOut_0000(0);
     Write_I_b_parThis_0000(Read_I_b_rung_top());
     I_i_scratch2 = 1;
-    if(U_i_CLEDstate == I_i_scratch2) {
+    if(U_i_Cstatus == I_i_scratch2) {
     } else {
         Write_I_b_parThis_0000(0);
     }
@@ -161,12 +161,12 @@ void PlcCycle(void)
     Write_I_b_parThis_0000(Read_I_b_rung_top());
     /* start series [ */
     I_i_scratch2 = 2;
-    if(U_i_CLEDstate == I_i_scratch2) {
+    if(U_i_Cstatus == I_i_scratch2) {
     } else {
         Write_I_b_parThis_0000(0);
     }
     
-    if(!Read_U_b_RflashOsc()) {
+    if(!Read_U_b_Rosc()) {
         Write_I_b_parThis_0000(0);
     }
     
@@ -176,7 +176,7 @@ void PlcCycle(void)
     }
     Write_I_b_rung_top(Read_I_b_parOut_0000());
     /* ] finish parallel */
-    Write_U_b_YD13(Read_I_b_rung_top());
+    Write_U_b_Y1(Read_I_b_rung_top());
     
     /* ] finish series */
 }

@@ -1,33 +1,33 @@
 LDmicro0.1
 MICRO=ANSI C Code
 CYCLE=10000
-CRYSTAL=20000000
+CRYSTAL=4000000
 BAUD=2400
-COMPILED=C:\Users\nicola\Documents\test.c
+COMPILED=C:\Users\nicola\Documents\git\playground\ArduinoPLD\ALEDBlinker\LEDBlinker.cpp
 
 IO LIST
-    XD12 at 0
-    YD13 at 0
+    X1 at 0
+    Y1 at 0
 END
 
 PROGRAM
 RUNG
-    CONTACTS RflashOsc 0
-    TON Tosc_on 250000
-    TOF Tosc_off 750000
-    COIL RflashOsc 1 0 0
+    CONTACTS Rosc 0
+    TON TdelayOn 100000
+    TOF TdelayOff 400000
+    COIL Rosc 1 0 0
 END
 RUNG
-    CONTACTS XD12 0
-    CTC CLEDstate 2
+    CONTACTS X1 0
+    CTC Cstatus 2
 END
 RUNG
     PARALLEL
-        EQU CLEDstate 1
+        EQU Cstatus 1
         SERIES
-            EQU CLEDstate 2
-            CONTACTS RflashOsc 0
+            EQU Cstatus 2
+            CONTACTS Rosc 0
         END
     END
-    COIL YD13 0 0 0
+    COIL Y1 0 0 0
 END

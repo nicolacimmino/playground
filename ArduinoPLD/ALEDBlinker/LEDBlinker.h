@@ -24,26 +24,23 @@ void PlcCycle(void);
 inline void PlcSetup() 
 {
   
-  pinMode(13, OUTPUT);
-  pinMode(12, INPUT);
+  pinMode(10, OUTPUT);
+  pinMode(9, INPUT);
+  digitalWrite(9, HIGH);
 }
 
 
 /* Individual pins (this code is used in ladder.cpp) */
 
-inline extern BOOL Read_U_b_XD12(void)
+inline extern BOOL Read_U_b_X1(void)
 {
-   return digitalRead(12)!=0;
+   return digitalRead(9)!=0;
 }
 
-inline BOOL Read_U_b_YD13(void)
-{
-    return digitalRead(13)!=0;
-}
 
-inline void Write_U_b_YD13(BOOL v)
+inline void Write_U_b_Y1(BOOL v)
 {
-    digitalWrite(13, v);
+    digitalWrite(10, v);
 }
 
 
