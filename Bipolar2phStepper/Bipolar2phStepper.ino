@@ -107,7 +107,7 @@ void stepMotorFullStepDrive(byte direction, uint8_t speedRPM, boolean holdContro
     // as they won't be enough to win the initial inertia. At higer speed
     // momentum will help so we can keep the pulse shorter, we also need to
     // keep the pulse shorter else we cannot achieved the desired RPM.
-    uint8_t controlPulseDuration = (speedRPM<=20)?100:10;
+    uint8_t controlPulseDuration = (speedRPM<=20)?150:10;
     if(holdControl) controlPulseDuration=0;
 
     // This is the expected interval in mS between two steps to reach the
@@ -198,5 +198,4 @@ void driveMotor(byte coilA, byte phaseB, uint8_t controlPulseDuration)
       driveMotor(NEUTRAL,NEUTRAL, 0);
     }
 }
-
 
