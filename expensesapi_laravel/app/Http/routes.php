@@ -13,8 +13,8 @@
 
 Route::get('/', 'WelcomeController@index');
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'auth'], function()
-{   
+Route::group(['prefix' => 'api/v1', 'middleware' => 'auth.basic'], function()
+{
     Route::resource('expenses', 'ExpensesController');
     Route::resource('tags', 'TagsController', ['only' => ['index', 'show']]);
 });
