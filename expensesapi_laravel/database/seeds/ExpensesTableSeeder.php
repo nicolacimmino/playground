@@ -12,21 +12,18 @@ class ExpensesTableSeeder extends Seeder {
     public function run()
     {
         DB::table('expenses')->delete();
-        Expense::create(['source' => 'bank',
-                                'destination' => 'food',
-                                'amount' => 12
-        ]);
 
-        Expense::create(['source' => 'bank',
-            'destination' => 'car',
-            'amount' => 20.2
-        ]);
+        $sources = ['bank', 'cash'];
+        $destinations = ['food', 'car', 'travel'];
 
-        Expense::create(['source' => 'cash',
-            'destination' => 'food',
-            'amount' => 2
-        ]);
+        for($ix=0;$ix<100;$ix++) {
+            Expense::create(
+                ['source' => $sources[rand(0, count($sources) - 1)],
+                'destination' => $destinations[rand(0, count($destinations) - 1)],
+                'amount' => rand(1,100),
+            ]);
 
+        }
     }
 
 }

@@ -12,6 +12,7 @@ namespace App\Http\Controllers;
 
 use App\Expense;
 use App\ExpenseTransformer;
+use App\TagTransformer;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 
@@ -19,7 +20,10 @@ class ExpensesController extends ApiController
 {
     public function index()
     {
-        return ExpenseTransformer::transformCollection(Expense::all());
+        $page = Input::get('page',1);
+        $limit = 10;
+        $expenses = Expense::all()->forPage($page, $limit);
+        return ExpenseTransformer::transformCollection($expenses);
     }
 
     public function show($id)
@@ -45,6 +49,20 @@ class ExpensesController extends ApiController
             'amount' => Input::get('amount')
                         ]);
         return $this->respondWithCreated();
+    }
+
+    public function expenseTags($id)
+    {
+        $expense = Expense::find($id);
+        if(!$expense)
+        {
+            return $this->respondWithNotFound();
+
+        }
+        return TagTransformer::transformCollection(Expense::find($id)->tags);
+
+        // Or this to just return a list of names
+        //return Expense::find($id)->tags->lists('name');
     }
 
 }

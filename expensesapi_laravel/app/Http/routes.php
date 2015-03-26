@@ -16,6 +16,7 @@ Route::get('/', 'WelcomeController@index');
 Route::group(['prefix' => 'api/v1', 'middleware' => 'auth.basic'], function()
 {
     Route::resource('expenses', 'ExpensesController');
+    Route::resource('expenses/{expense}/tags', 'ExpensesController@expenseTags');
     Route::resource('tags', 'TagsController', ['only' => ['index', 'show']]);
 });
 
