@@ -8,7 +8,10 @@ class TagsTableSeeder extends Seeder {
     public function run()
     {
         DB::table('tags')->delete();
-        Tag::create(['name' => 'travel']);
-        Tag::create(['name' => 'home']);
+        Tag::create(['name' => 'summer trip']);
+        Tag::create(['name' => 'visit london']);
+        Tag::create(['name' => 'everyday']);
+        Tag::create(['name' => 'refundable']);
+
     }
 }

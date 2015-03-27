@@ -7,6 +7,8 @@
  */
 
 namespace App\Http\Controllers;
+use App\Expense;
+use App\ExpenseTransformer;
 use App\Tag;
 use App\TagTransformer;
 
@@ -18,5 +20,9 @@ class TagsController  extends ApiController {
 
     public function show($id) {
         return TagTransformer::transform(Tag::find($id));
+    }
+
+    public function expenses($id) {
+        return ExpenseTransformer::transformCollection(Tag::find($id)->expenses()->get());
     }
 }

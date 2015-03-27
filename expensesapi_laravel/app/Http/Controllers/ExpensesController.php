@@ -51,7 +51,7 @@ class ExpensesController extends ApiController
         return $this->respondWithCreated();
     }
 
-    public function expenseTags($id)
+    public function tags($id)
     {
         $expense = Expense::find($id);
         if(!$expense)
