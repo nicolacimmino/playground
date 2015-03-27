@@ -41,7 +41,7 @@ class ApiController extends Controller {
         return (new Response())->setStatusCode($this->status_code);
     }
 
-    
+
     private function respondWithSuccess()
     {
         // If the error is not explicitely set

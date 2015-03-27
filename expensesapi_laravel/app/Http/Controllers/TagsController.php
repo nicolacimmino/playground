@@ -7,7 +7,12 @@
  */
 
 namespace App\Http\Controllers;
+use App\Tag;
+use App\TagTransformer;
 
 class TagsController  extends ApiController {
 
+    public function index() {
+        return TagTransformer::transformCollection(Tag::all());
+    }
 }
