@@ -15,6 +15,7 @@ class TagTransformer {
     public static function transform($tag)
     {
         return [
+            'id' => $tag['id'],
             'name' => $tag['name']
         ];
     }

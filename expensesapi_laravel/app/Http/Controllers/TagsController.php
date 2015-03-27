@@ -15,4 +15,8 @@ class TagsController  extends ApiController {
     public function index() {
         return TagTransformer::transformCollection(Tag::all());
     }
+
+    public function show($id) {
+        return TagTransformer::transform(Tag::find($id));
+    }
 }

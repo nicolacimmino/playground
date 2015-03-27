@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model {
 
-    protected $hidden = ['id'];
+    //protected $hidden = ['id'];
 
     protected $fillable = ['name'];
 
