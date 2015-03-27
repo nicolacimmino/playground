@@ -13,7 +13,7 @@ class ExpensesTagPivotTableSeeder extends Seeder {
         $tagsIds = Tag::lists('id');
 
         DB::table('expense_tag')->delete();
-        for($ix=0;$ix<10;$ix++)
+        for($ix=0;$ix<count($expensesIds)*3;$ix++)
         {
             DB::table('expense_tag')->insert([
                 'expense_id' => $expensesIds[rand(0, count($expensesIds) - 1)],
