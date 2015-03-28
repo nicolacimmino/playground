@@ -21,6 +21,8 @@ class ApiController extends Controller {
 
     private $status_code;
 
+    private $content;
+
     /*
      * Sets the status code. This is private to force
      * the usage of the the "respond" methods.
@@ -28,6 +30,11 @@ class ApiController extends Controller {
     private function setStatusCode($error)
     {
         $this->status_code = $error;
+        return $this;
+    }
+
+    private function setContent($content) {
+        $this->content = $content;
         return $this;
     }
 
@@ -49,7 +56,7 @@ class ApiController extends Controller {
         if(!$this->status_code) {
             $this->setStatusCode(200);
         }
-        return (new Response())->setStatusCode($this->status_code);
+        return (new Response())->setStatusCode($this->status_code)->setContent($this->content);
     }
 
     public function respondWithBadRequest()
@@ -62,9 +69,9 @@ class ApiController extends Controller {
         return $this->setStatusCode(404)->respondWithError();
     }
 
-    public function respondWithCreated()
+    public function respondWithCreated($id)
     {
-        return $this->setStatusCode(201)->respondWithSuccess();
+        return $this->setStatusCode(201)->setContent(['id'=>$id])->respondWithSuccess();
     }
 
 }

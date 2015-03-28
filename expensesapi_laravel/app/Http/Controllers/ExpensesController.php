@@ -14,6 +14,7 @@ use App\Expense;
 use App\ExpenseTransformer;
 use App\TagTransformer;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 class ExpensesController extends ApiController
@@ -22,17 +23,16 @@ class ExpensesController extends ApiController
     {
         $page = Input::get('page',1);
         $limit = 10;
-        $expenses = Expense::all()->forPage($page, $limit);
+        $expenses = Expense::where('user_id', '=', Auth::user()['id'])->get()->forPage($page, $limit);
         return ExpenseTransformer::transformCollection($expenses);
     }
 
     public function show($id)
     {
-        $expense = Expense::find($id);
+        $expense = Expense::where('id','=', $id)->where('user_id', '=', Auth::user()['id'])->first();
         if(!$expense)
         {
             return $this->respondWithNotFound();
-
         }
         return ExpenseTransformer::transform($expense);
     }
@@ -43,12 +43,13 @@ class ExpensesController extends ApiController
         {
             return $this->respondWithBadRequest();
         }
-        Expense::create([
+        $expense = Expense::create([
             'source' => Input::get('from'),
             'destination' => Input::get('to'),
-            'amount' => Input::get('amount')
+            'amount' => Input::get('amount'),
+            'user_id' => Auth::user()['id'],
                         ]);
-        return $this->respondWithCreated();
+        return $this->respondWithCreated($expense->id);
     }
 
     public function tags($id)

@@ -18,6 +18,7 @@ class CreateExpensesTable extends Migration {
             $table->string('source');
             $table->string('destination');
             $table->decimal('amount',10,2);
+            $table->integer('user_id');
             $table->timestamps();
 		});
 	}

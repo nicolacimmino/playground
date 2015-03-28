@@ -21,6 +21,7 @@ class ExpensesTableSeeder extends Seeder {
                 ['source' => $sources[rand(0, count($sources) - 1)],
                 'destination' => $destinations[rand(0, count($destinations) - 1)],
                 'amount' => rand(1,100),
+                'user_id' => 1,
             ]);
 
         }
