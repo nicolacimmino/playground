@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder {
         // said "delete won't do what you expect". Need to find out!
         //DB::statement("SET FOREIGN_KEY_CHECKS=0");
 
-		$this->call('ExpensesTableSeeder');
+        $this->call('UsersTableSeeder');
+        $this->call('ExpensesTableSeeder');
         $this->call('TagsTableSeeder');
         $this->call('ExpensesTagPivotTableSeeder');
 
